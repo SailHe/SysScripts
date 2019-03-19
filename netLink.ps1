@@ -22,15 +22,7 @@ Write-Output("²éÑ¯"+ $currentPath.Replace('*', '') +"¼°Æä×ÓÄ¿Â¼ÖÐËùÓÐÊ¹ÓÃÍøÂçÁ¬½
 $pastLinkCount = 0
 $currentLinkCount = 0
 do{
-    # Get-Alias ps; Get-Process
-    #Get-Alias ?
-    #CommandType     Name                                               Version    Source                                                                          
-    #-----------     ----                                               -------    ------                                                                          
-    #Alias           % -> ForEach-Object                                                                                                                           
-    #Alias           ? -> Where-Object                                                                                                                             
-    #Alias           h -> Get-History                                                                                                                              
-    #Alias           r -> Invoke-History
-
+    
     $newLinkCount = 0
     $oldLinkCount = 0
     #ps| Where-Object -FilterScript { $_.Path  -match 'E:\\Program Files Green\\*'} | % -Process
