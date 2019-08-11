@@ -5,50 +5,72 @@
 
 param
 (
-# [string]$FileName=$(throw "Parameter missing: -FileName FileName"), # 强制要求参数
-[string]$FileName,
-[string]$DirName,
+# [string]$RegularItemName=$(throw "Parameter missing: -RegularItemName RegularItemName"), # 强制要求参数
+[string]$RegularItemName,
 [string]$FileInfo,
+
+[string[]]$includeitemList,
+[string[]]$excludeItemList,
+[string[]]$excludePathList,
+
 [int]$Depth,
 [int]$DisCreateDay,
+# 是否搜索当天的项目
 [switch]$isToday,
+
+# 当搜索文件详情时是否显示更详细的结果
 [switch]$isShowDirInfo,
 
-#排除某些文件夹名称
-[switch]$isTextFile,
-[switch]$isHtmlFile,
-[switch]$isMarkdownFile,
-[switch]$isLogFile,
-[switch]$isJsonFile,
-[switch]$isAllFile,
+[switch]$isFile,
+[switch]$isDir,
+
+# 快速排除某些项目名称
+[switch]$includeTextItem,
+[switch]$includeHtmlItem,
+[switch]$includeMarkdownItem,
+[switch]$includeLogItem,
+[switch]$includeJsonItem,
+# 数据传输格式
+[switch]$includeDataTransmissionItem,
+# 脚本格式
+[switch]$includeScriptItem,
+# 编译型语言格式
+[switch]$includeCompiledLanguageItem,
+# 样式格式
+[switch]$includeStyleItem,
+# 编程语言格式
+[switch]$includeAllCodeItem,
 
 [switch]$isNotNodePath,
-[switch]$isNotCacheDir,
-[switch]$isNotTempDir
+[switch]$isNotCachePath,
+[switch]$isNotTempPath
 )
 
-#定义一个强类型变量 包含列表
-# 文件包含
-[string[]]$includeFileList = $null
-# 排除目录名
-[string[]]$excludeDirList = $null
+# 强类型变量 名称列表
+# 包含项目
+#[string[]]$includeitemList = $null
+# 排除项目
+#[string[]]$excludeItemList = $null
 # 排除路径名
-[string[]]$excludePathList = $null
+#[string[]]$excludePathList = $null
 
 $parMap = @{}
-$parMap.Add("FileName", $FileName)
+$parMap.Add("RegularItemName", $RegularItemName)
 $parMap.Add("FileInfo", $FileInfo)
 $parMap.Add("Depth", $Depth)
-#$parMap.Add("OrFile", "1")
 $parMap.Add("DisCreateDay", $DisCreateDay)
 
-$contextType = $null
+$contextItemType = [System.IO.FileSystemInfo]
 
-if(!$FileName -and !$DirName){
+$reaultCount = 0;
+$fullPath = (gi .).FullName.ToString()
+
+
+if(!$RegularItemName -and !$RegularItemName){
      # 都没有输入表示默认搜索文件
     # 脚本默认参数 (还有'全局'默认参数)
     # 此处if里面的改动貌似被{}给限制了 只想到这个办法
-    $parMap["FileName"] = "*"
+    $parMap["RegularItemName"] = "*"
 }
 
 if(!$Depth){
@@ -59,7 +81,7 @@ if(!$DisCreateDay -and !$isToday){
     $parMap["DisCreateDay"] = -365
 }
 
-$FileName = $parMap["FileName"]
+$RegularItemName = $parMap["RegularItemName"]
 $FileInfo = $parMap["FileInfo"]
 $Depth = $parMap["Depth"]
 $DisCreateDay = $parMap["DisCreateDay"]
@@ -72,111 +94,136 @@ if($DisCreateDay -gt 0){
 
 # 2级递归 包含项目(文件夹 或 文件)名称为 "*.json" 和 *.log(可不加双引号) 排除项目"nodemon*" 和 "*toolkit*"
 #  Get-ChildItem -s -Depth 2 -Include "*.json" , *.log  -Exclude "nodemon*", "*toolkit*"
-if($isTextFile){
- $includeFileList += "*.txt"
+if($includeTextItem){
+ $includeitemList += "*.txt"
 }
-if($isHtmlFile){
- $includeFileList += "*.html"
+if($includeHtmlItem){
+ $includeitemList += "*.html"
 }
-if($isMarkdownFile){
- $includeFileList += "*.md"
+if($includeMarkdownItem){
+ $includeitemList += "*.md"
 }
-if($isLogFile){
- $includeFileList += "*.log"
+if($includeLogItem){
+ $includeitemList += "*.log"
 }
-if($isJsonFile){
- $includeFileList += "*.json"
+if($includeJsonItem){
+ $includeitemList += "*.json"
 }
-if($isAllFile){
- $includeFileList = "*"
+if($includeAllCodeItem){
+ $includeCompiledLanguageItem = $true;
+ $includeScriptItem           = $true;
+ $includeDataTransmissionItem = $true;
+ $includeStyleItem            = $true;
+}
+if($includeCompiledLanguageItem){
+ $includeitemList += "*.c"
+ $includeitemList += "*.cpp"
+ $includeitemList += "*.h"
+ $includeitemList += "*.java"
+ $includeitemList += "*.cs"
+}
+if($includeScriptItem){
+ $includeitemList += "*.sql"
+ $includeitemList += "*.vbs"
+ $includeitemList += "*.js"
+ $includeitemList += "*.lua"
+ $includeitemList += "*.rb"
+ $includeitemList += "*.py"
+ $includeitemList += "*.cmd"
+ $includeitemList += "*.bat"
+ $includeitemList += "*.ps1"
+ $includeitemList += "*.sh"
+}
+if($includeDataTransmissionItem){
+ $includeitemList += "*.xml"
+ $includeitemList += "*.yml"
+ $includeitemList += "*.yaml"
+}
+if($includeStyleItem){
+ $includeitemList += "*.css"
+ $includeitemList += "*.scss"
+ $includeitemList += "*.sacss"
 }
 
 if($isNotNodePath){
  $excludePathList += "*node_modules*"
 }
-if($isNotCacheDir){
- $excludeDirList += "*cache*"
+if($isNotCachePath){
+ $excludePathList += "*cache*"
 }
-if($isNotTempDir){
- $excludeDirList += "*temp*"
- $excludeDirList += "*tmp*"
+if($isNotTempPath){
+ $excludePathList += "*temp*"
+ $excludePathList += "*tmp*"
 }
 
-"子目录递归匹配"
-"递归深度" + $Depth
-"包含文件列表" + $includeFileList
-"时间距离" + $DisCreateDay
-" ->"
+"(P1)子目录递归深度" + $Depth + "匹配"
+"(P1)包含项目名称匹配列表" + $includeitemList
+"(P1)排除项目名称匹配列表" + $excludeItemList
+"(P2)距离今日" + $DisCreateDay + "天"
+"(P2)排除路径列表" + $excludePathList
+"(P2)项目名称正则表达式: [" + $RegularItemName + "]"
+# $parMap["FileInfo"] = " " # 至少得是个空格
+" ->->->->->->->->"
+""
 
 function trimPsPath([string]$psPath){
- return $psPath.ToString().Replace("Microsoft.PowerShell.Core\FileSystem::", "");
+    return $psPath.ToString().Replace("Microsoft.PowerShell.Core\FileSystem::", "");
 }
 
-$reaultCount = 0;
-$fullPath = (gi .).FullName.ToString()
+if($isDir -and $FileInfo){
+    Write-Error("目录不支持内容搜索");
+} else {
+    if($isDir -and $isFile){
+        #使用初始值 搜索文件与目录
+    } else {
+        if($isDir){
+            $contextItemType = [IO.DirectoryInfo]
+        } else {
+            if($isFile -or $FileInfo){
+                $contextItemType = [IO.fileinfo]
+            }else{
+                #使用初始值 搜索文件与目录
+            }
+        }
+    }
+}
 
 # Get-ChildItem别名: Dir; ls(来自UNIX家族)
-if($FileName){
-    "正则文件名称: [" + $FileName + "]"
-    $contextType = [IO.fileinfo]
-    if($FileInfo){
-        # $parMap["FileInfo"] = " " # 至少得是个空格
-        "文本内容: [" + $FileInfo + "]"
-        ""
-        # -File 可以筛选文件
-        Get-ChildItem -s -Depth $Depth -File -Include $includeFileList | 
-        Where-Object { $_.GetType().Equals($contextType) -and $_.Name -like $FileName -and $_.CreationTime -gt (Get-Date).AddDays($DisCreateDay) } | 
-            ForEach-Object { Select-String -Path $_.PSPath -Pattern $FileInfo -Casesensitive -SimpleMatch }  | 
-                group Path | % {
-                    "";
-                    # 减掉首部的'\'以及尾部的文件名
-                    "目录深度: " + ($_.Values.Replace($fullPath, "").Split('\').Length - 2)
-                    #$_.Name;
-                    $_.Count.ToString() + "处 路径位于 -> " + $_.Values;
-                    if($isShowDirInfo){
-                        "____________________________=子路径|匹配行数|匹配内容=____________________________";
-                        $_.Group;
-                    }
-                    "";
-                    $reaultCount = $reaultCount + 1;
-                }
-    }else{
-        Get-ChildItem -s -Depth $Depth -Include $includeFileList | 
-        Where-Object { $_.GetType().Equals($contextType) -and $_.Name -like $FileName } | 
-                # % PSPath # 除非是输出单个属性(没有其余操作)才能不用花括号以及$_
-                % {
-                    trimPsPath($_.PSPath.ToString());
-                    $reaultCount = $reaultCount + 1;
-                }
-    }
-    "搜索文件数:" + $reaultCount;
-}
-if($DirName){
-    "排除目录列表" + $excludeDirList
-    "排除路径列表" + $excludePathList
-    "模糊目录名称: [" + $DirName + "]"
-    ""
-    $contextType = [IO.DirectoryInfo]
-    # -Exclude 仅排除目录名称(项目) 不排除路径 -and $_.Name  -notlike $excludeDirList
-    Get-ChildItem -s -Depth $Depth -Directory -Exclude $excludeDirList | 
-        Where-Object { $_.GetType().Equals($contextType) -and $_.Name -like $DirName  -and $_.PSPath.ToString().Replace("Microsoft.PowerShell.Core\FileSystem::", "") -notlike $excludePathList } | 
-                % {
-                    trimPsPath($_.PSPath.ToString());
-                    $reaultCount = $reaultCount + 1;
-                }
-    "搜索目录数:" + $reaultCount;
-}
+# 筛选文件/目录
+# ls -File
+# ls -Directory
+# | ? $_.GetType().Equals($contextItemType)
+$condition = Get-ChildItem -s -Depth $Depth -Include $includeitemList -Exclude $excludeItemList | 
+             Where-Object {
+                 $_ -is $contextItemType -and 
+                 $_.Name -like $RegularItemName -and 
+                 $_.CreationTime -gt (Get-Date).AddDays($DisCreateDay) -and 
+                 # -Exclude 仅排除目录名称(项目) 不排除路径 -and $_.Name  -notlike $excludeItemList
+                 $_.PSPath.ToString().Replace("Microsoft.PowerShell.Core\FileSystem::", "") -notlike $excludePathList
+             }
 
 #TypeName:Microsoft.PowerShell.Commands.GroupInfo
-#
-#Name        MemberType Definition
-#----        ---------- ----------
-#Equals      Method     bool Equals(System.Object obj)
-#GetHashCode Method     int GetHashCode()
-#GetType     Method     type GetType()
-#ToString    Method     string ToString()
-
-#reaultCount       Property   int reaultCount {get;}
-#Group       Property   System.Collections.ObjectModel.Collection[psobject] Group {get;}
-#Name        Property   string Name {get;}
-#Values      Property   System.Collections.ArrayList Values {get;}
+if($FileInfo){
+"模糊匹配文本内容: [" + $FileInfo + "]"
+$condition | ForEach-Object { Select-String -Path $_.PSPath -Pattern $FileInfo -Casesensitive -SimpleMatch }  | 
+        group Path | % {
+            "";
+            # 减掉首部的'\'以及尾部的文件名
+            "目录深度: " + ($_.Values.Replace($fullPath, "").Split('\').Length - 2)
+            #$_.Name;
+            $_.Count.ToString() + "处 路径位于 -> " + $_.Values;
+            if($isShowDirInfo){
+                "____________________________=子路径|匹配行数|匹配内容=____________________________";
+                $_.Group;
+            }
+            "";
+            $reaultCount = $reaultCount + 1;
+        }
+} else {
+# % PSPath # 除非是输出单个属性(没有其余操作)才能不用花括号以及$_
+$condition | % {
+                trimPsPath($_.PSPath.ToString());
+                $reaultCount = $reaultCount + 1;
+            }
+}
+"搜索项目数:" + $reaultCount;
