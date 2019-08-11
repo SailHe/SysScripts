@@ -6,8 +6,8 @@
 param
 (
 # [string]$RegularItemName=$(throw "Parameter missing: -RegularItemName RegularItemName"), # 强制要求参数
-[string]$RegularItemName,
 [string]$FileInfo,
+[string]$RegularItemName,
 
 [string[]]$includeitemList,
 [string[]]$excludeItemList,
