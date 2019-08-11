@@ -63,7 +63,8 @@ $parMap.Add("DisCreateDay", $DisCreateDay)
 $contextItemType = [System.IO.FileSystemInfo]
 
 $reaultCount = 0;
-$fullPath = (gi .).FullName.ToString()
+# 搜索上下文路径
+$searchContextFullPath = (gi .).FullName.ToString()
 
 
 if(!$RegularItemName -and !$RegularItemName){
@@ -209,7 +210,7 @@ $condition | ForEach-Object { Select-String -Path $_.PSPath -Pattern $FileInfo -
         group Path | % {
             "";
             # 减掉首部的'\'以及尾部的文件名
-            "目录深度: " + ($_.Values.Replace($fullPath, "").Split('\').Length - 2)
+            "目录深度: " + ($_.Values.Replace($searchContextFullPath, "").Split('\').Length - 2)
             #$_.Name;
             $_.Count.ToString() + "处 路径位于 -> " + $_.Values;
             if($isShowDirInfo){
