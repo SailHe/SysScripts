@@ -27,8 +27,8 @@ param
 # 快速排除某些项目名称
 [switch]$includeTextItem,
 [switch]$includeHtmlItem,
-[switch]$includeMarkdownItem,
-[switch]$includeLogItem,
+[switch]$includeCompressItem,
+[switch]$includeEBookItem,
 [switch]$includeJsonItem,
 # 数据传输格式
 [switch]$includeDataTransmissionItem,
@@ -41,6 +41,11 @@ param
 # 编程语言格式
 [switch]$includeAllCodeItem,
 
+[string]$includeCustomPathType,
+# 使用默认的包含路径文件
+[switch]$includeCustomPath,
+# 使用自定义的包含路径文件
+[string]$includeCustomPathFile,
 [switch]$isNotNodePath,
 [switch]$isNotCachePath,
 [switch]$isNotTempPath
@@ -65,6 +70,41 @@ $contextItemType = [System.IO.FileSystemInfo]
 $reaultCount = 0;
 # 搜索上下文路径
 $searchContextFullPath = (gi .).FullName.ToString()
+
+[string]$configPath = Join-Path $HOME "/item-filter-config.txt"
+[string[]]$includePathList = $null
+if($includeCustomPathFile){
+    $configPath = $includeCustomPathFile;
+}
+if($includeCustomPath){
+    $includePathList = Get-Content $configPath
+    for($i = 0; $i -lt $includePathList.Count; ++$i){
+        $ele = $includePathList[$i];
+        $ele = $ele.Split(";");
+        [string[]]$trimPath = $ele[1];
+        #$trimPath.ToString().LastIndexOf(" ");
+        $trimPath = $trimPath.Replace(" ", "").Trim('\t');
+        #"---:" + $trimPath
+        if($parMap.Contains($ele[0])){
+            $parMap[$ele[0]] += $trimPath;
+        }else{
+            $parMap.Add($ele[0], $trimPath);
+        }
+        #switch($ele[0]){
+        #    "Tutorial" { $trimPath = $ele[1].Trim(' '); break;}
+        #}
+        $includePathList[$i] = $trimPath
+    }
+    # 若指定了类型 则路径列表只包含该类型的路径 否则就是全部
+    if($includeCustomPathType){
+        if($parMap.Contains($includeCustomPathType)){
+            $includePathList = $parMap[$includeCustomPathType]
+        }else{
+            Write-Error("指定路径类型[" + $includeCustomPathType + "]不存在");
+            return;
+        }
+    }
+}
 
 
 if(!$RegularItemName -and !$RegularItemName){
@@ -97,18 +137,24 @@ if($DisCreateDay -gt 0){
 #  Get-ChildItem -s -Depth 2 -Include "*.json" , *.log  -Exclude "nodemon*", "*toolkit*"
 if($includeTextItem){
  $includeitemList += "*.txt"
+ $includeitemList += "*.log"
+ $includeitemList += "*.md"
 }
 if($includeHtmlItem){
  $includeitemList += "*.html"
 }
-if($includeMarkdownItem){
- $includeitemList += "*.md"
+if($includeCompressItem){
+ $includeitemList += "*.zip"
+ $includeitemList += "*.7z"
+ $includeitemList += "*.r2r"
+ $includeitemList += "*.tar"
 }
-if($includeLogItem){
- $includeitemList += "*.log"
-}
-if($includeJsonItem){
- $includeitemList += "*.json"
+if($includeEBookItem){
+ $includeitemList += "*.pdf"
+ $includeitemList += "*.mobi"
+ $includeitemList += "*.azw3"
+ $includeitemList += "*.epub"
+ $includeitemList += "*.chm"
 }
 if($includeAllCodeItem){
  $includeCompiledLanguageItem = $true;
@@ -139,11 +185,14 @@ if($includeDataTransmissionItem){
  $includeitemList += "*.xml"
  $includeitemList += "*.yml"
  $includeitemList += "*.yaml"
+ $includeJsonItem = $true;
+}
+if($includeJsonItem){
+ $includeitemList += "*.json"
 }
 if($includeStyleItem){
  $includeitemList += "*.css"
  $includeitemList += "*.scss"
- $includeitemList += "*.sacss"
 }
 
 if($isNotNodePath){
@@ -157,15 +206,17 @@ if($isNotTempPath){
  $excludePathList += "*tmp*"
 }
 
-"(P1)子目录递归深度" + $Depth + "匹配"
-"(P1)包含项目名称匹配列表" + $includeitemList
-"(P1)排除项目名称匹配列表" + $excludeItemList
-"(P2)距离今日" + $DisCreateDay + "天"
-"(P2)排除路径列表" + $excludePathList
+"(P1)子目录递归深度[" + $Depth + "]匹配"
+"(P1)包含项目名称匹配列表[" + $includeitemList + "]"
+"(P1)排除项目名称匹配列表[" + $excludeItemList + "]"
+"(P1)包含路径列表[" + $includePathList + "]"
+"(P2)排除路径列表[" + $excludePathList + "]"
+"(P2)距离今日[" + $DisCreateDay + "]天"
 "(P2)项目名称正则表达式: [" + $RegularItemName + "]"
 # $parMap["FileInfo"] = " " # 至少得是个空格
 " ->->->->->->->->"
 ""
+$start = Get-Date
 
 function trimPsPath([string]$psPath){
     return $psPath.ToString().Replace("Microsoft.PowerShell.Core\FileSystem::", "");
@@ -182,8 +233,11 @@ if($isDir -and $FileInfo){
         } else {
             if($isFile -or $FileInfo){
                 $contextItemType = [IO.fileinfo]
+                if(($includeCustomPath -or $includeCustomPath -or $includeCustomPathType) -and $Depth){
+                    "指定了包含路径时将忽略递归深度限定"
+                }
             }else{
-                #使用初始值 搜索文件与目录
+                # 未指定 -> 使用初始值 搜索文件与目录
             }
         }
     }
@@ -194,7 +248,7 @@ if($isDir -and $FileInfo){
 # ls -File
 # ls -Directory
 # | ? $_.GetType().Equals($contextItemType)
-$condition = Get-ChildItem -s -Depth $Depth -Include $includeitemList -Exclude $excludeItemList | 
+$condition = Get-ChildItem -s -Depth $Depth -Include $includeitemList -Exclude $excludeItemList -Path $includePathList | 
              Where-Object {
                  $_ -is $contextItemType -and 
                  $_.Name -like $RegularItemName -and 
@@ -228,3 +282,8 @@ $condition | % {
             }
 }
 "搜索项目数:" + $reaultCount;
+
+# 无输出诊断计时 https://www.pstips.net/logging-script-runtime.html
+# Measure-Command -Expression {}
+$end = Get-Date
+Write-Host -ForegroundColor Red ('Total Runtime: ' + ($end - $start).TotalSeconds)
