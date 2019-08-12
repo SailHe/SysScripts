@@ -15,8 +15,6 @@ param
 
 [int]$Depth,
 [int]$DisCreateDay,
-# 是否搜索当天的项目
-[switch]$isToday,
 
 # 当搜索文件详情时是否显示更详细的结果
 [switch]$isShowDirInfo,
@@ -63,10 +61,11 @@ $parMap = @{}
 $parMap.Add("RegularItemName", $RegularItemName)
 $parMap.Add("FileInfo", $FileInfo)
 $parMap.Add("Depth", $Depth)
-$parMap.Add("DisCreateDay", $DisCreateDay)
 
 $contextItemType = [System.IO.FileSystemInfo]
 
+# 默认搜索所有时间点的项目
+$DisCreateDayDateTime = $null
 $reaultCount = 0;
 # 搜索上下文路径
 $searchContextFullPath = (gi .).FullName.ToString()
@@ -118,19 +117,17 @@ if(!$Depth){
     $parMap["Depth"] = 1
 }
 
-if(!$DisCreateDay -and !$isToday){
-    $parMap["DisCreateDay"] = -365
-}
-
 $RegularItemName = $parMap["RegularItemName"]
 $FileInfo = $parMap["FileInfo"]
 $Depth = $parMap["Depth"]
-$DisCreateDay = $parMap["DisCreateDay"]
 
-# $DisCreateDay > 0 表示将此变量内容输出到一个名为0的文件
-if($DisCreateDay -gt 0){
- #Write-Error("创建时间只能选取之前的")
- "你选择了一个未来的时间点 请确认存在那样的项目"
+if($DisCreateDay -ne 0){
+    $DisCreateDayDateTime = (Get-Date).AddDays($DisCreateDay);
+    # $DisCreateDayDateTime > 0 表示将此变量内容输出到一个名为0的文件
+    if($DisCreateDay -gt 0){
+     #Write-Error("创建时间只能选取之前的")
+     "你选择了一个未来的时间点 请确认存在那样的项目"
+    }
 }
 
 # 2级递归 包含项目(文件夹 或 文件)名称为 "*.json" 和 *.log(可不加双引号) 排除项目"nodemon*" 和 "*toolkit*"
@@ -211,7 +208,9 @@ if($isNotTempPath){
 "(P1)排除项目名称匹配列表[" + $excludeItemList + "]"
 "(P1)包含路径列表[" + $includePathList + "]"
 "(P2)排除路径列表[" + $excludePathList + "]"
-"(P2)距离今日[" + $DisCreateDay + "]天"
+if($DisCreateDay){
+    "(P2)距离今日[" + $DisCreateDay + "]天, 于[" + $DisCreateDayDateTime.ToString("yyyy-MM-dd HH:mm:ss") + "]之前";
+}
 "(P2)项目名称正则表达式: [" + $RegularItemName + "]"
 # $parMap["FileInfo"] = " " # 至少得是个空格
 " ->->->->->->->->"
@@ -252,7 +251,7 @@ $condition = Get-ChildItem -s -Depth $Depth -Include $includeitemList -Exclude $
              Where-Object {
                  $_ -is $contextItemType -and 
                  $_.Name -like $RegularItemName -and 
-                 $_.CreationTime -gt (Get-Date).AddDays($DisCreateDay) -and 
+                 $_.CreationTime -ge $DisCreateDayDateTime -and 
                  # -Exclude 仅排除目录名称(项目) 不排除路径 -and $_.Name  -notlike $excludeItemList
                  $_.PSPath.ToString().Replace("Microsoft.PowerShell.Core\FileSystem::", "") -notlike $excludePathList
              }
