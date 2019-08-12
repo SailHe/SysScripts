@@ -9,7 +9,7 @@ param
 [string]$FileInfo,
 [string]$RegularItemName,
 
-[string[]]$includeitemList,
+[string[]]$includeItemList,
 [string[]]$excludeItemList,
 [string[]]$excludePathList,
 
@@ -51,7 +51,7 @@ param
 
 # 强类型变量 名称列表
 # 包含项目
-#[string[]]$includeitemList = $null
+#[string[]]$includeItemList = $null
 # 排除项目
 #[string[]]$excludeItemList = $null
 # 排除路径名
@@ -133,25 +133,25 @@ if($DisCreateDay -ne 0){
 # 2级递归 包含项目(文件夹 或 文件)名称为 "*.json" 和 *.log(可不加双引号) 排除项目"nodemon*" 和 "*toolkit*"
 #  Get-ChildItem -s -Depth 2 -Include "*.json" , *.log  -Exclude "nodemon*", "*toolkit*"
 if($includeTextItem){
- $includeitemList += "*.txt"
- $includeitemList += "*.log"
- $includeitemList += "*.md"
+ $includeItemList += "*.txt"
+ $includeItemList += "*.log"
+ $includeItemList += "*.md"
 }
 if($includeHtmlItem){
- $includeitemList += "*.html"
+ $includeItemList += "*.html"
 }
 if($includeCompressItem){
- $includeitemList += "*.zip"
- $includeitemList += "*.7z"
- $includeitemList += "*.r2r"
- $includeitemList += "*.tar"
+ $includeItemList += "*.zip"
+ $includeItemList += "*.7z"
+ $includeItemList += "*.r2r"
+ $includeItemList += "*.tar"
 }
 if($includeEBookItem){
- $includeitemList += "*.pdf"
- $includeitemList += "*.mobi"
- $includeitemList += "*.azw3"
- $includeitemList += "*.epub"
- $includeitemList += "*.chm"
+ $includeItemList += "*.pdf"
+ $includeItemList += "*.mobi"
+ $includeItemList += "*.azw3"
+ $includeItemList += "*.epub"
+ $includeItemList += "*.chm"
 }
 if($includeAllCodeItem){
  $includeCompiledLanguageItem = $true;
@@ -160,36 +160,36 @@ if($includeAllCodeItem){
  $includeStyleItem            = $true;
 }
 if($includeCompiledLanguageItem){
- $includeitemList += "*.c"
- $includeitemList += "*.cpp"
- $includeitemList += "*.h"
- $includeitemList += "*.java"
- $includeitemList += "*.cs"
+ $includeItemList += "*.c"
+ $includeItemList += "*.cpp"
+ $includeItemList += "*.h"
+ $includeItemList += "*.java"
+ $includeItemList += "*.cs"
 }
 if($includeScriptItem){
- $includeitemList += "*.sql"
- $includeitemList += "*.vbs"
- $includeitemList += "*.js"
- $includeitemList += "*.lua"
- $includeitemList += "*.rb"
- $includeitemList += "*.py"
- $includeitemList += "*.cmd"
- $includeitemList += "*.bat"
- $includeitemList += "*.ps1"
- $includeitemList += "*.sh"
+ $includeItemList += "*.sql"
+ $includeItemList += "*.vbs"
+ $includeItemList += "*.js"
+ $includeItemList += "*.lua"
+ $includeItemList += "*.rb"
+ $includeItemList += "*.py"
+ $includeItemList += "*.cmd"
+ $includeItemList += "*.bat"
+ $includeItemList += "*.ps1"
+ $includeItemList += "*.sh"
 }
 if($includeDataTransmissionItem){
- $includeitemList += "*.xml"
- $includeitemList += "*.yml"
- $includeitemList += "*.yaml"
+ $includeItemList += "*.xml"
+ $includeItemList += "*.yml"
+ $includeItemList += "*.yaml"
  $includeJsonItem = $true;
 }
 if($includeJsonItem){
- $includeitemList += "*.json"
+ $includeItemList += "*.json"
 }
 if($includeStyleItem){
- $includeitemList += "*.css"
- $includeitemList += "*.scss"
+ $includeItemList += "*.css"
+ $includeItemList += "*.scss"
 }
 
 if($isNotNodePath){
@@ -204,7 +204,7 @@ if($isNotTempPath){
 }
 
 "(P1)子目录递归深度[" + $Depth + "]匹配"
-"(P1)包含项目名称匹配列表[" + $includeitemList + "]"
+"(P1)包含项目名称匹配列表[" + $includeItemList + "]"
 "(P1)排除项目名称匹配列表[" + $excludeItemList + "]"
 "(P1)包含路径列表[" + $includePathList + "]"
 "(P2)排除路径列表[" + $excludePathList + "]"
@@ -247,7 +247,7 @@ if($isDir -and $FileInfo){
 # ls -File
 # ls -Directory
 # | ? $_.GetType().Equals($contextItemType)
-$condition = Get-ChildItem -s -Depth $Depth -Include $includeitemList -Exclude $excludeItemList -Path $includePathList | 
+$condition = Get-ChildItem -s -Depth $Depth -Include $includeItemList -Exclude $excludeItemList -Path $includePathList | 
              Where-Object {
                  $_ -is $contextItemType -and 
                  $_.Name -like $RegularItemName -and 
