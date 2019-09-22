@@ -257,6 +257,7 @@ $condition = Get-ChildItem -s -Depth $Depth -Include $includeItemList -Exclude $
              }
 
 #TypeName:Microsoft.PowerShell.Commands.GroupInfo
+#[Select-String](https://docs.microsoft.com/zh-CN/powershell/module/microsoft.powershell.utility/select-string?view=powershell-6)
 if($FileInfo){
 "模糊匹配文本内容: [" + $FileInfo + "]"
 $condition | ForEach-Object { Select-String -Path $_.PSPath -Pattern $FileInfo -Casesensitive -SimpleMatch }  | 
