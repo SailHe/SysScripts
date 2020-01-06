@@ -277,7 +277,9 @@ $condition | ForEach-Object { Select-String -Path $_.PSPath -Pattern $FileInfo -
 } else {
 # % PSPath # 除非是输出单个属性(没有其余操作)才能不用花括号以及$_
 $condition | % {
-                trimPsPath($_.PSPath.ToString());
+				if($_.PSPath){ # 貌似盘符根目录是空
+					trimPsPath($_.PSPath.ToString());
+				}
                 $reaultCount = $reaultCount + 1;
             }
 }
