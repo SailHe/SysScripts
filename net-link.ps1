@@ -1,7 +1,7 @@
-# ²é¿´Ö¸¶¨Ìõ¼şÏÂ(Â·¾¶)³ÌĞòµÄtcpÍøÂçÁ¬½ÓÇé¿ö ÊµÊ±(¼ä¸ô1s)Ë¢ĞÂ; Èç¹ûÃ»ÓĞ¸üĞÂÔò²»Êä³ö(Ôö¼ÓÊ±»á¼ì²â³öÀ´ÔöÁ¿, ¼õÉÙÊ±²»×÷±ä¶¯)
+# æŸ¥çœ‹æŒ‡å®šæ¡ä»¶ä¸‹(è·¯å¾„)ç¨‹åºçš„tcpç½‘ç»œè¿æ¥æƒ…å†µ å®æ—¶(é—´éš”1s)åˆ·æ–°; å¦‚æœæ²¡æœ‰æ›´æ–°åˆ™ä¸è¾“å‡º(å¢åŠ æ—¶ä¼šæ£€æµ‹å‡ºæ¥å¢é‡, å‡å°‘æ—¶ä¸ä½œå˜åŠ¨)
 # @see
-# Ô­Àí: http://blog.csdn.net/shrekz/article/details/38585417
-# HashTableÓÃ·¨: https://zhuanlan.zhihu.com/p/31651291
+# åŸç†: http://blog.csdn.net/shrekz/article/details/38585417
+# HashTableç”¨æ³•: https://zhuanlan.zhihu.com/p/31651291
 # https://docs.microsoft.com/en-us/powershell/module/Microsoft.PowerShell.Utility/
 # https://ss64.com/ps/
 
@@ -13,11 +13,11 @@ param
 
 $netLinkMap = @{}
 $fullPath = (gi .).FullName.ToString()
-# È¥³ıÇı¶¯Æ÷( F:\)Ä©Î²µÄ'\'
+# å»é™¤é©±åŠ¨å™¨( F:\)æœ«å°¾çš„'\'
 $currentPath = If($fullPath.LastIndexOf('\') -eq $fullPath.Length - 1){$fullPath.Substring(0, $fullPath.Length - 1)} Else {$fullPath}
-# Ê¹ÓÃ'/'ÎŞ·¨Æ¥Åä
+# ä½¿ç”¨'/'æ— æ³•åŒ¹é…
 $currentPath = ($currentPath + "\*").Replace('\', '\\')
-Write-Output("²éÑ¯"+ $currentPath.Replace('*', '') +"¼°Æä×ÓÄ¿Â¼ÖĞËùÓĞÊ¹ÓÃÍøÂçÁ¬½Ó½øĞĞÍ¨ĞÅµÄ½ø³Ì")
+Write-Output("æŸ¥è¯¢"+ $currentPath.Replace('*', '') +"åŠå…¶å­ç›®å½•ä¸­æ‰€æœ‰ä½¿ç”¨ç½‘ç»œè¿æ¥è¿›è¡Œé€šä¿¡çš„è¿›ç¨‹")
 
 $pastLinkCount = 0
 $currentLinkCount = 0
@@ -35,30 +35,30 @@ do{
         netstat -ano | ForEach-Object -Process {
                #Write-Output($_.Length)
                # Write-Output($_.GetType())
-               # $i: PSCustomObject(Ê¹ÓÃSelect-Object´´½¨×Ô¶¨Òå¶ÔÏó)
+               # $i: PSCustomObject(ä½¿ç”¨Select-Objectåˆ›å»ºè‡ªå®šä¹‰å¯¹è±¡)
                # @see https://www.pstips.net/powershell-create-creating-custom-objects.html
                # https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/netstat
-               #  LISTEN£ºµÈ´ıÈÎºÎÔ¶³ÌTCPµÄÁ¬½ÓÇëÇó¡£
-               #  SYN-SENT£º·¢ËÍÁ¬½ÓÇëÇóºó£¬µÈ´ıÆ¥ÅäÁ¬½ÓÇëÇó¡£
-               #  SYN-RECEIVED£ºÊÕµ½²¢·¢ËÍÒ»¸öÁ¬½ÓÇëÇóºó£¬µÈ´ıÁ¬½ÓÇëÇóÈ·ÈÏ¡£
-               #  ESTABLISHED£ºÒ»¸ö´ò¿ªµÄÁ¬½Ó£¬ÊÕµ½µÄÊı¾İ¿ÉÒÔµİ½»¸øÓÃ»§£¬Õı³£µÄÊı¾İ´«Êä×´Ì¬¡£
-               #  FIN-WAIT-1£ºµÈ´ıÔ¶³ÌTCPµÄÖÕÖ¹ÇëÇó£¬»òµÈ´ıÖÕÖ¹ÇëÇóµÄÈ·ÈÏ¡£
-               #  FIN-WAIT-2£ºµÈ´ıÔ¶³ÌTCPµÄÖÕÖ¹ÇëÇó¡£
-               #  CLOSE-WAIT£ºµÈ´ı±¾µØÓÃ»§µÄÁ¬½ÓÖÕÖ¹ÇëÇó¡£
-               #  CLOSING£ºµÈ´ıÔ¶³ÌTCPµÄÖÕÖ¹ÇëÇóÈ·ÈÏ¡£
-               #  LAST-ACK£ºµÈ´ıÔ¶³ÌTCPÖÕÖ¹ÇëÇóµÄÈ·ÈÏ£¬Ö®Ç°·¢ËÍµÄÖÕÖ¹ÇëÇó°üº¬ÖÕÖ¹ÇëÇóµÄÈ·ÈÏ¡£
-               #  TIME-WAIT£ºµÈ´ı×ã¹»µÄÊ±¼ä£¬È·±£Ô¶³ÌTCPÊÕµ½ÁËÖÕÖ¹ÇëÇóµÄÈ·ÈÏ¡£
-               #  CLOSED£ºÃ»ÓĞÈÎºÎÁ¬½Ó×´Ì¬¡£
+               #  LISTENï¼šç­‰å¾…ä»»ä½•è¿œç¨‹TCPçš„è¿æ¥è¯·æ±‚ã€‚
+               #  SYN-SENTï¼šå‘é€è¿æ¥è¯·æ±‚åï¼Œç­‰å¾…åŒ¹é…è¿æ¥è¯·æ±‚ã€‚
+               #  SYN-RECEIVEDï¼šæ”¶åˆ°å¹¶å‘é€ä¸€ä¸ªè¿æ¥è¯·æ±‚åï¼Œç­‰å¾…è¿æ¥è¯·æ±‚ç¡®è®¤ã€‚
+               #  ESTABLISHEDï¼šä¸€ä¸ªæ‰“å¼€çš„è¿æ¥ï¼Œæ”¶åˆ°çš„æ•°æ®å¯ä»¥é€’äº¤ç»™ç”¨æˆ·ï¼Œæ­£å¸¸çš„æ•°æ®ä¼ è¾“çŠ¶æ€ã€‚
+               #  FIN-WAIT-1ï¼šç­‰å¾…è¿œç¨‹TCPçš„ç»ˆæ­¢è¯·æ±‚ï¼Œæˆ–ç­‰å¾…ç»ˆæ­¢è¯·æ±‚çš„ç¡®è®¤ã€‚
+               #  FIN-WAIT-2ï¼šç­‰å¾…è¿œç¨‹TCPçš„ç»ˆæ­¢è¯·æ±‚ã€‚
+               #  CLOSE-WAITï¼šç­‰å¾…æœ¬åœ°ç”¨æˆ·çš„è¿æ¥ç»ˆæ­¢è¯·æ±‚ã€‚
+               #  CLOSINGï¼šç­‰å¾…è¿œç¨‹TCPçš„ç»ˆæ­¢è¯·æ±‚ç¡®è®¤ã€‚
+               #  LAST-ACKï¼šç­‰å¾…è¿œç¨‹TCPç»ˆæ­¢è¯·æ±‚çš„ç¡®è®¤ï¼Œä¹‹å‰å‘é€çš„ç»ˆæ­¢è¯·æ±‚åŒ…å«ç»ˆæ­¢è¯·æ±‚çš„ç¡®è®¤ã€‚
+               #  TIME-WAITï¼šç­‰å¾…è¶³å¤Ÿçš„æ—¶é—´ï¼Œç¡®ä¿è¿œç¨‹TCPæ”¶åˆ°äº†ç»ˆæ­¢è¯·æ±‚çš„ç¡®è®¤ã€‚
+               #  CLOSEDï¼šæ²¡æœ‰ä»»ä½•è¿æ¥çŠ¶æ€ã€‚
                $i = $_ | Select-Object -Property Protocol, Source, Destination, Mode, Pid, Pname, Ppath
-               # Ğ­Òé; ±¾Ô´ÍøÂçIPµØÖ·; Ä¿±êÍøÂçIPµØÖ·; TCPÁ¬½ÓµÄ×´Ì¬{https://tools.ietf.org/html/rfc793}; ½ø³ÌID; ½ø³ÌÃû
-               # https://zh.wikipedia.org/wiki/Ä¬ÈÏÂ·ÓÉ
-               # {Source=127.0.0.1:1080; Destination=0.0.0.0:0;} ±¾Ô´ÍøÂçÊÇ½ø³ÌÍ¨ĞÅIPµÄ»Ø»·µØÖ·µÄ1080¶Ë¿Ú(¼àÌı), Ä¿±êÍøÂçÊÇ ±¾»úµÄËùÓĞ IP µØÖ·¡£
+               # åè®®; æœ¬æºç½‘ç»œIPåœ°å€; ç›®æ ‡ç½‘ç»œIPåœ°å€; TCPè¿æ¥çš„çŠ¶æ€{https://tools.ietf.org/html/rfc793}; è¿›ç¨‹ID; è¿›ç¨‹å
+               # https://zh.wikipedia.org/wiki/é»˜è®¤è·¯ç”±
+               # {Source=127.0.0.1:1080; Destination=0.0.0.0:0;} æœ¬æºç½‘ç»œæ˜¯è¿›ç¨‹é€šä¿¡IPçš„å›ç¯åœ°å€çš„1080ç«¯å£(ç›‘å¬), ç›®æ ‡ç½‘ç»œæ˜¯ æœ¬æœºçš„æ‰€æœ‰ IP åœ°å€ã€‚
                # {Source=127.0.0.1:2710; Destination=127.0.0.1:1080;} 
                $null, $i.Protocol, $i.Source, $i.Destination, $i.Mode, $i.Pid=  ($_ -split '\s{2,}')
                $i
         } | ? { $_.Pid -eq $id } | % {
                 # try{
-                #     # Key = Value ¸½¼ÓHashTable
+                #     # Key = Value é™„åŠ HashTable
                 #     $netLinkMap += @{ $_.Destination = $_.Source }
                 #     ++$newLinkCount
                 # 
@@ -85,17 +85,17 @@ do{
    $change = $currentLinkCount - $pastLinkCount
    if($change -ne 0) {
     if($change -lt 0){
-       "½«ÉÏÊöÓï¾ä¸ÄĞ´Îª·½·¨, ÖØĞÂµ÷ÓÃÒ»´ÎÊä³öÏÖÓĞÁ¬½Ó¼´¿É"
+       "å°†ä¸Šè¿°è¯­å¥æ”¹å†™ä¸ºæ–¹æ³•, é‡æ–°è°ƒç”¨ä¸€æ¬¡è¾“å‡ºç°æœ‰è¿æ¥å³å¯"
     }
-    # Ôö¼Ó»ò¼õÉÙ
-    "±ä»¯Á¬½ÓÊı: " + $change
-    #"ĞÂÔöÁ¬½ÓÊı: " + $newLinkCount
-    "Ô­ÓĞÁ¬½ÓÊı: " + $oldLinkCount
-    "ÏÖ´æ×ÜÁ¬½ÓÊı: " + $currentLinkCount
+    # å¢åŠ æˆ–å‡å°‘
+    "å˜åŒ–è¿æ¥æ•°: " + $change
+    #"æ–°å¢è¿æ¥æ•°: " + $newLinkCount
+    "åŸæœ‰è¿æ¥æ•°: " + $oldLinkCount
+    "ç°å­˜æ€»è¿æ¥æ•°: " + $currentLinkCount
     "--------------------------------------------------"
    }
    sleep 1
 }while($Loop)
 
-"ËùÓĞÁ¬½Ó: "
+"æ‰€æœ‰è¿æ¥: "
 $netLinkMap

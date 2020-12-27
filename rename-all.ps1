@@ -1,37 +1,37 @@
-# ±È½Ï¼òÂª µ«·½±ãµÄ ÅúÁ¿Ìæ»»ÎÄ¼şÃû
+# æ¯”è¾ƒç®€é™‹ ä½†æ–¹ä¾¿çš„ æ‰¹é‡æ›¿æ¢æ–‡ä»¶å
 
-# ¾ÉÃû³ÆÖĞµÄÆ¥Åä×Ö·û´® ÓÃÓÚÌæ»»¸Ã×Ö·û´®µÄĞÂÃû³Æ ÎÄ¼şÀàĞÍÉ¸Ñ¡
+# æ—§åç§°ä¸­çš„åŒ¹é…å­—ç¬¦ä¸² ç”¨äºæ›¿æ¢è¯¥å­—ç¬¦ä¸²çš„æ–°åç§° æ–‡ä»¶ç±»å‹ç­›é€‰
 param($oldtext, $newtext, $filter)
 
-# PowerShell3.0Ö®Ç° $CurrentyDir = Split-Path -Parent $MyInvocation.MyCommand.Definition;
-# ½Å±¾ÎÄ¼şÂ·¾¶
+# PowerShell3.0ä¹‹å‰ $CurrentyDir = Split-Path -Parent $MyInvocation.MyCommand.Definition;
+# è„šæœ¬æ–‡ä»¶è·¯å¾„
 #$RenameWorkPath = $PSScriptRoot
 
-# PowerShell½ø³Ìµ±Ç°Ëù´¦Â·¾¶
+# PowerShellè¿›ç¨‹å½“å‰æ‰€å¤„è·¯å¾„
 $RenameWorkPath = (gi .).FullName.ToString()
 
-# ¶¨Òå¹ıÂËÌõ¼ş
+# å®šä¹‰è¿‡æ»¤æ¡ä»¶
 #$Filter = '*.png'
 $Filter = $filter
 #$newtext = 'newName'
-# Èç¹ûÃû³Æ¹ıÓÚ¼òµ¥±ÈÈçen¿ÉÄÜ»á: ÎŞ·¨ÖØÃüÃûÖ¸¶¨µÄÄ¿±ê£¬ÒòÎª¸ÃÄ¿±ê±íÊ¾Â·¾¶»òÉè±¸Ãû³Æ¡£
+# å¦‚æœåç§°è¿‡äºç®€å•æ¯”å¦‚enå¯èƒ½ä¼š: æ— æ³•é‡å‘½åæŒ‡å®šçš„ç›®æ ‡ï¼Œå› ä¸ºè¯¥ç›®æ ‡è¡¨ç¤ºè·¯å¾„æˆ–è®¾å¤‡åç§°ã€‚
 #$oldtext = 'oldname'
 
 # $host.UI.WriteErrorLine
-Write-Host("½«[" + $RenameWorkPath + "]Â·¾¶ÏÂÃû³Æ´øÓĞ[" + $oldtext + "]ÇÒ°üº¬[" + $filter + "]µÄËùÓĞÏîÄ¿µÄÃû³Æ Ìæ»»Îª[" + $newtext + "]") -ForegroundColor Red -BackgroundColor Gray
+Write-Host("å°†[" + $RenameWorkPath + "]è·¯å¾„ä¸‹åç§°å¸¦æœ‰[" + $oldtext + "]ä¸”åŒ…å«[" + $filter + "]çš„æ‰€æœ‰é¡¹ç›®çš„åç§° æ›¿æ¢ä¸º[" + $newtext + "]") -ForegroundColor Red -BackgroundColor Gray
 $oP = ($RenameWorkPath + "/*" + $oldtext + "*");
 $oP
-# Rename-Item ¿ÉÒÔ×÷ÓÃÓÚÎÄ¼ş¼Ğ µ«ÊÇÕâÀïÉ¸Ñ¡Ã²ËÆ²»´ó·½±ã
+# Rename-Item å¯ä»¥ä½œç”¨äºæ–‡ä»¶å¤¹ ä½†æ˜¯è¿™é‡Œç­›é€‰è²Œä¼¼ä¸å¤§æ–¹ä¾¿
 $includeItem = ls $oP -Include $Filter -Recurse -File;
 pause
 $includeItem | out-host -paging
-$sure = Read-Host 'ÇëÈ·ÈÏÖ´ĞĞÉÏÊöÌæ»» ÈôÌæ»»ÁË´íÎóµÄÏîÄ¿ ÎŞ·¨³·Ïú! y/n ³ıÁËy¶¼±íÊ¾È¡Ïû'
+$sure = Read-Host 'è¯·ç¡®è®¤æ‰§è¡Œä¸Šè¿°æ›¿æ¢ è‹¥æ›¿æ¢äº†é”™è¯¯çš„é¡¹ç›® æ— æ³•æ’¤é”€! y/n é™¤äº†yéƒ½è¡¨ç¤ºå–æ¶ˆ'
 
 if($sure-eq'y'){
     $count = 0;
     $includeItem  | ForEach-Object{
-        # Ä¬ÈÏÇé¿öÏÂ catch Óï¾äÎŞ·¨²¶»ñ Non-Terminating Errors
-        # [PowerShell Òì³£´¦Àí - sparkdev - ²©¿ÍÔ°](https://www.cnblogs.com/sparkdev/p/8376747.html)
+        # é»˜è®¤æƒ…å†µä¸‹ catch è¯­å¥æ— æ³•æ•è· Non-Terminating Errors
+        # [PowerShell å¼‚å¸¸å¤„ç† - sparkdev - åšå®¢å›­](https://www.cnblogs.com/sparkdev/p/8376747.html)
         # [Rename-Item](https://docs.microsoft.com/zh-CN/powershell/module/microsoft.powershell.management/rename-item?view=powershell-6)
         try{
             Rename-Item -Path $_.FullName -NewName $_.Name.Replace($oldtext, $newtext) -ErrorAction Stop;
@@ -41,7 +41,7 @@ if($sure-eq'y'){
             Write-Error($PSItem.ToString());
         }
     }
-    Write-Output($Path+'ÖĞËùÓĞÆ¥ÅäµÄÎÄ¼ş' + $count + '¸öÖØÃüÃû³É¹¦');
+    Write-Output($Path+'ä¸­æ‰€æœ‰åŒ¹é…çš„æ–‡ä»¶' + $count + 'ä¸ªé‡å‘½åæˆåŠŸ');
 }else{
-    "ÖØÃüÃû²Ù×÷ÒÑÈ¡Ïû"
+    "é‡å‘½åæ“ä½œå·²å–æ¶ˆ"
 }

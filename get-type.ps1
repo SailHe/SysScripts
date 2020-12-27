@@ -26,5 +26,5 @@ function Get-Type
 
 Get-Type($InputObject);
 
-# [PowerShell¹ÜµÀÈëÃÅ£¬¿´¿´Äã¶¼»á²»£¨¹ÜµÀÀı×Ó´óÈ«£© - ÓÀÔ¶Ş¹Ş¹ - ²©¿ÍÔ°](https://www.cnblogs.com/lavender000/p/6941393.html)
-# [PowerShell½ÓÊÕ¶à¸öÊäÈë ¨C PowerShell ÖĞÎÄ²©¿Í](https://www.pstips.net/accepting-multiple-input.html)
+# [PowerShellç®¡é“å…¥é—¨ï¼Œçœ‹çœ‹ä½ éƒ½ä¼šä¸ï¼ˆç®¡é“ä¾‹å­å¤§å…¨ï¼‰ - æ°¸è¿œè–°è–° - åšå®¢å›­](https://www.cnblogs.com/lavender000/p/6941393.html)
+# [PowerShellæ¥æ”¶å¤šä¸ªè¾“å…¥ â€“ PowerShell ä¸­æ–‡åšå®¢](https://www.pstips.net/accepting-multiple-input.html)

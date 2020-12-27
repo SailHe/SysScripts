@@ -1,11 +1,11 @@
-# µİ¹éÄ¿Â¼ÉÏÏÂÎÄËÑË÷(Ö§³ÖÖĞÎÄIO) Ö§³ÖÆ¥Åä ÎÄ¼şÃû, ÎÄ¼şÄÚÈİ, Ä¿Â¼Ãû
-# ËÑË÷µÄ¸ùÄ¿Â¼ÊÇ½ø³ÌÖ´ĞĞÊ±µÄ»·¾³Ëù´¦µÄÄ¿Â¼
+# é€’å½’ç›®å½•ä¸Šä¸‹æ–‡æœç´¢(æ”¯æŒä¸­æ–‡IO) æ”¯æŒåŒ¹é… æ–‡ä»¶å, æ–‡ä»¶å†…å®¹, ç›®å½•å
+# æœç´¢çš„æ ¹ç›®å½•æ˜¯è¿›ç¨‹æ‰§è¡Œæ—¶çš„ç¯å¢ƒæ‰€å¤„çš„ç›®å½•
 # https://docs.microsoft.com/zh-cn/powershell/module/microsoft.powershell.management/get-childitem?view=powershell-6
 # https://www.pstips.net/accessing-files-and-directories.html
 
 param
 (
-# [string]$RegularItemName=$(throw "Parameter missing: -RegularItemName RegularItemName"), # Ç¿ÖÆÒªÇó²ÎÊı
+# [string]$RegularItemName=$(throw "Parameter missing: -RegularItemName RegularItemName"), # å¼ºåˆ¶è¦æ±‚å‚æ•°
 [string]$FileInfo,
 [string]$RegularItemName,
 
@@ -16,45 +16,45 @@ param
 [int]$Depth,
 [int]$DisCreateDay,
 
-# µ±ËÑË÷ÎÄ¼şÏêÇéÊ±ÊÇ·ñÏÔÊ¾¸üÏêÏ¸µÄ½á¹û
+# å½“æœç´¢æ–‡ä»¶è¯¦æƒ…æ—¶æ˜¯å¦æ˜¾ç¤ºæ›´è¯¦ç»†çš„ç»“æœ
 [switch]$isShowDirInfo,
 
 [switch]$isFile,
 [switch]$isDir,
 
-# ¿ìËÙÅÅ³ıÄ³Ğ©ÏîÄ¿Ãû³Æ
+# å¿«é€Ÿæ’é™¤æŸäº›é¡¹ç›®åç§°
 [switch]$includeTextItem,
 [switch]$includeHtmlItem,
 [switch]$includeCompressItem,
 [switch]$includeEBookItem,
 [switch]$includeJsonItem,
-# Êı¾İ´«Êä¸ñÊ½
+# æ•°æ®ä¼ è¾“æ ¼å¼
 [switch]$includeDataTransmissionItem,
-# ½Å±¾¸ñÊ½
+# è„šæœ¬æ ¼å¼
 [switch]$includeScriptItem,
-# ±àÒëĞÍÓïÑÔ¸ñÊ½
+# ç¼–è¯‘å‹è¯­è¨€æ ¼å¼
 [switch]$includeCompiledLanguageItem,
-# ÑùÊ½¸ñÊ½
+# æ ·å¼æ ¼å¼
 [switch]$includeStyleItem,
-# ±à³ÌÓïÑÔ¸ñÊ½
+# ç¼–ç¨‹è¯­è¨€æ ¼å¼
 [switch]$includeAllCodeItem,
 
 [string]$includeCustomPathType,
-# Ê¹ÓÃÄ¬ÈÏµÄ°üº¬Â·¾¶ÎÄ¼ş
+# ä½¿ç”¨é»˜è®¤çš„åŒ…å«è·¯å¾„æ–‡ä»¶
 [switch]$includeCustomPath,
-# Ê¹ÓÃ×Ô¶¨ÒåµÄ°üº¬Â·¾¶ÎÄ¼ş
+# ä½¿ç”¨è‡ªå®šä¹‰çš„åŒ…å«è·¯å¾„æ–‡ä»¶
 [string]$includeCustomPathFile,
 [switch]$isNotNodePath,
 [switch]$isNotCachePath,
 [switch]$isNotTempPath
 )
 
-# Ç¿ÀàĞÍ±äÁ¿ Ãû³ÆÁĞ±í
-# °üº¬ÏîÄ¿
+# å¼ºç±»å‹å˜é‡ åç§°åˆ—è¡¨
+# åŒ…å«é¡¹ç›®
 #[string[]]$includeItemList = $null
-# ÅÅ³ıÏîÄ¿
+# æ’é™¤é¡¹ç›®
 #[string[]]$excludeItemList = $null
-# ÅÅ³ıÂ·¾¶Ãû
+# æ’é™¤è·¯å¾„å
 #[string[]]$excludePathList = $null
 
 $parMap = @{}
@@ -64,10 +64,10 @@ $parMap.Add("Depth", $Depth)
 
 $contextItemType = [System.IO.FileSystemInfo]
 
-# Ä¬ÈÏËÑË÷ËùÓĞÊ±¼äµãµÄÏîÄ¿
+# é»˜è®¤æœç´¢æ‰€æœ‰æ—¶é—´ç‚¹çš„é¡¹ç›®
 $DisCreateDayDateTime = $null
 $reaultCount = 0;
-# ËÑË÷ÉÏÏÂÎÄÂ·¾¶
+# æœç´¢ä¸Šä¸‹æ–‡è·¯å¾„
 $searchContextFullPath = (gi .).FullName.ToString()
 
 [string]$configPath = Join-Path $HOME "/item-filter-config.txt"
@@ -94,12 +94,12 @@ if($includeCustomPath){
         #}
         $includePathList[$i] = $trimPath
     }
-    # ÈôÖ¸¶¨ÁËÀàĞÍ ÔòÂ·¾¶ÁĞ±íÖ»°üº¬¸ÃÀàĞÍµÄÂ·¾¶ ·ñÔò¾ÍÊÇÈ«²¿
+    # è‹¥æŒ‡å®šäº†ç±»å‹ åˆ™è·¯å¾„åˆ—è¡¨åªåŒ…å«è¯¥ç±»å‹çš„è·¯å¾„ å¦åˆ™å°±æ˜¯å…¨éƒ¨
     if($includeCustomPathType){
         if($parMap.Contains($includeCustomPathType)){
             $includePathList = $parMap[$includeCustomPathType]
         }else{
-            Write-Error("Ö¸¶¨Â·¾¶ÀàĞÍ[" + $includeCustomPathType + "]²»´æÔÚ");
+            Write-Error("æŒ‡å®šè·¯å¾„ç±»å‹[" + $includeCustomPathType + "]ä¸å­˜åœ¨");
             return;
         }
     }
@@ -107,9 +107,9 @@ if($includeCustomPath){
 
 
 if(!$RegularItemName -and !$RegularItemName){
-     # ¶¼Ã»ÓĞÊäÈë±íÊ¾Ä¬ÈÏËÑË÷ÎÄ¼ş
-    # ½Å±¾Ä¬ÈÏ²ÎÊı (»¹ÓĞ'È«¾Ö'Ä¬ÈÏ²ÎÊı)
-    # ´Ë´¦ifÀïÃæµÄ¸Ä¶¯Ã²ËÆ±»{}¸øÏŞÖÆÁË Ö»Ïëµ½Õâ¸ö°ì·¨
+     # éƒ½æ²¡æœ‰è¾“å…¥è¡¨ç¤ºé»˜è®¤æœç´¢æ–‡ä»¶
+    # è„šæœ¬é»˜è®¤å‚æ•° (è¿˜æœ‰'å…¨å±€'é»˜è®¤å‚æ•°)
+    # æ­¤å¤„ifé‡Œé¢çš„æ”¹åŠ¨è²Œä¼¼è¢«{}ç»™é™åˆ¶äº† åªæƒ³åˆ°è¿™ä¸ªåŠæ³•
     $parMap["RegularItemName"] = "*"
 }
 
@@ -123,14 +123,14 @@ $Depth = $parMap["Depth"]
 
 if($DisCreateDay -ne 0){
     $DisCreateDayDateTime = (Get-Date).AddDays($DisCreateDay);
-    # $DisCreateDayDateTime > 0 ±íÊ¾½«´Ë±äÁ¿ÄÚÈİÊä³öµ½Ò»¸öÃûÎª0µÄÎÄ¼ş
+    # $DisCreateDayDateTime > 0 è¡¨ç¤ºå°†æ­¤å˜é‡å†…å®¹è¾“å‡ºåˆ°ä¸€ä¸ªåä¸º0çš„æ–‡ä»¶
     if($DisCreateDay -gt 0){
-     #Write-Error("´´½¨Ê±¼äÖ»ÄÜÑ¡È¡Ö®Ç°µÄ")
-     "ÄãÑ¡ÔñÁËÒ»¸öÎ´À´µÄÊ±¼äµã ÇëÈ·ÈÏ´æÔÚÄÇÑùµÄÏîÄ¿"
+     #Write-Error("åˆ›å»ºæ—¶é—´åªèƒ½é€‰å–ä¹‹å‰çš„")
+     "ä½ é€‰æ‹©äº†ä¸€ä¸ªæœªæ¥çš„æ—¶é—´ç‚¹ è¯·ç¡®è®¤å­˜åœ¨é‚£æ ·çš„é¡¹ç›®"
     }
 }
 
-# 2¼¶µİ¹é °üº¬ÏîÄ¿(ÎÄ¼ş¼Ğ »ò ÎÄ¼ş)Ãû³ÆÎª "*.json" ºÍ *.log(¿É²»¼ÓË«ÒıºÅ) ÅÅ³ıÏîÄ¿"nodemon*" ºÍ "*toolkit*"
+# 2çº§é€’å½’ åŒ…å«é¡¹ç›®(æ–‡ä»¶å¤¹ æˆ– æ–‡ä»¶)åç§°ä¸º "*.json" å’Œ *.log(å¯ä¸åŠ åŒå¼•å·) æ’é™¤é¡¹ç›®"nodemon*" å’Œ "*toolkit*"
 #  Get-ChildItem -s -Depth 2 -Include "*.json" , *.log  -Exclude "nodemon*", "*toolkit*"
 if($includeTextItem){
  $includeItemList += "*.txt"
@@ -203,16 +203,16 @@ if($isNotTempPath){
  $excludePathList += "*tmp*"
 }
 
-"(P1)×ÓÄ¿Â¼µİ¹éÉî¶È[" + $Depth + "]Æ¥Åä"
-"(P1)°üº¬ÏîÄ¿Ãû³ÆÆ¥ÅäÁĞ±í[" + $includeItemList + "]"
-"(P1)ÅÅ³ıÏîÄ¿Ãû³ÆÆ¥ÅäÁĞ±í[" + $excludeItemList + "]"
-"(P1)°üº¬Â·¾¶ÁĞ±í[" + $includePathList + "]"
-"(P2)ÅÅ³ıÂ·¾¶ÁĞ±í[" + $excludePathList + "]"
+"(P1)å­ç›®å½•é€’å½’æ·±åº¦[" + $Depth + "]åŒ¹é…"
+"(P1)åŒ…å«é¡¹ç›®åç§°åŒ¹é…åˆ—è¡¨[" + $includeItemList + "]"
+"(P1)æ’é™¤é¡¹ç›®åç§°åŒ¹é…åˆ—è¡¨[" + $excludeItemList + "]"
+"(P1)åŒ…å«è·¯å¾„åˆ—è¡¨[" + $includePathList + "]"
+"(P2)æ’é™¤è·¯å¾„åˆ—è¡¨[" + $excludePathList + "]"
 if($DisCreateDay){
-    "(P2)¾àÀë½ñÈÕ[" + $DisCreateDay + "]Ìì, ÓÚ[" + $DisCreateDayDateTime.ToString("yyyy-MM-dd HH:mm:ss") + "]Ö®Ç°";
+    "(P2)è·ç¦»ä»Šæ—¥[" + $DisCreateDay + "]å¤©, äº[" + $DisCreateDayDateTime.ToString("yyyy-MM-dd HH:mm:ss") + "]ä¹‹å‰";
 }
-"(P2)ÏîÄ¿Ãû³ÆÕıÔò±í´ïÊ½: [" + $RegularItemName + "]"
-# $parMap["FileInfo"] = " " # ÖÁÉÙµÃÊÇ¸ö¿Õ¸ñ
+"(P2)é¡¹ç›®åç§°æ­£åˆ™è¡¨è¾¾å¼: [" + $RegularItemName + "]"
+# $parMap["FileInfo"] = " " # è‡³å°‘å¾—æ˜¯ä¸ªç©ºæ ¼
 " ->->->->->->->->"
 ""
 $start = Get-Date
@@ -222,10 +222,10 @@ function trimPsPath([string]$psPath){
 }
 
 if($isDir -and $FileInfo){
-    Write-Error("Ä¿Â¼²»Ö§³ÖÄÚÈİËÑË÷");
+    Write-Error("ç›®å½•ä¸æ”¯æŒå†…å®¹æœç´¢");
 } else {
     if($isDir -and $isFile){
-        #Ê¹ÓÃ³õÊ¼Öµ ËÑË÷ÎÄ¼şÓëÄ¿Â¼
+        #ä½¿ç”¨åˆå§‹å€¼ æœç´¢æ–‡ä»¶ä¸ç›®å½•
     } else {
         if($isDir){
             $contextItemType = [IO.DirectoryInfo]
@@ -233,17 +233,17 @@ if($isDir -and $FileInfo){
             if($isFile -or $FileInfo){
                 $contextItemType = [IO.fileinfo]
                 if(($includeCustomPath -or $includeCustomPath -or $includeCustomPathType) -and $Depth){
-                    "Ö¸¶¨ÁË°üº¬Â·¾¶Ê±½«ºöÂÔµİ¹éÉî¶ÈÏŞ¶¨"
+                    "æŒ‡å®šäº†åŒ…å«è·¯å¾„æ—¶å°†å¿½ç•¥é€’å½’æ·±åº¦é™å®š"
                 }
             }else{
-                # Î´Ö¸¶¨ -> Ê¹ÓÃ³õÊ¼Öµ ËÑË÷ÎÄ¼şÓëÄ¿Â¼
+                # æœªæŒ‡å®š -> ä½¿ç”¨åˆå§‹å€¼ æœç´¢æ–‡ä»¶ä¸ç›®å½•
             }
         }
     }
 }
 
-# Get-ChildItem±ğÃû: Dir; ls(À´×ÔUNIX¼Ò×å)
-# É¸Ñ¡ÎÄ¼ş/Ä¿Â¼
+# Get-ChildItemåˆ«å: Dir; ls(æ¥è‡ªUNIXå®¶æ—)
+# ç­›é€‰æ–‡ä»¶/ç›®å½•
 # ls -File
 # ls -Directory
 # | ? $_.GetType().Equals($contextItemType)
@@ -252,40 +252,40 @@ $condition = Get-ChildItem -s -Depth $Depth -Include $includeItemList -Exclude $
                  $_ -is $contextItemType -and 
                  $_.Name -like $RegularItemName -and 
                  $_.CreationTime -ge $DisCreateDayDateTime -and 
-                 # -Exclude ½öÅÅ³ıÄ¿Â¼Ãû³Æ(ÏîÄ¿) ²»ÅÅ³ıÂ·¾¶ -and $_.Name  -notlike $excludeItemList
+                 # -Exclude ä»…æ’é™¤ç›®å½•åç§°(é¡¹ç›®) ä¸æ’é™¤è·¯å¾„ -and $_.Name  -notlike $excludeItemList
                  $_.PSPath.ToString().Replace("Microsoft.PowerShell.Core\FileSystem::", "") -notlike $excludePathList
              }
 
 #TypeName:Microsoft.PowerShell.Commands.GroupInfo
 #[Select-String](https://docs.microsoft.com/zh-CN/powershell/module/microsoft.powershell.utility/select-string?view=powershell-6)
 if($FileInfo){
-"Ä£ºıÆ¥ÅäÎÄ±¾ÄÚÈİ: [" + $FileInfo + "]"
+"æ¨¡ç³ŠåŒ¹é…æ–‡æœ¬å†…å®¹: [" + $FileInfo + "]"
 $condition | ForEach-Object { Select-String -Path $_.PSPath -Pattern $FileInfo -Casesensitive -SimpleMatch }  | 
         group Path | % {
             "";
-            # ¼õµôÊ×²¿µÄ'\'ÒÔ¼°Î²²¿µÄÎÄ¼şÃû
-            "Ä¿Â¼Éî¶È: " + ($_.Values.Replace($searchContextFullPath, "").Split('\').Length - 2)
+            # å‡æ‰é¦–éƒ¨çš„'\'ä»¥åŠå°¾éƒ¨çš„æ–‡ä»¶å
+            "ç›®å½•æ·±åº¦: " + ($_.Values.Replace($searchContextFullPath, "").Split('\').Length - 2)
             #$_.Name;
-            $_.Count.ToString() + "´¦ Â·¾¶Î»ÓÚ -> " + $_.Values;
+            $_.Count.ToString() + "å¤„ è·¯å¾„ä½äº -> " + $_.Values;
             if($isShowDirInfo){
-                "____________________________=×ÓÂ·¾¶|Æ¥ÅäĞĞÊı|Æ¥ÅäÄÚÈİ=____________________________";
+                "____________________________=å­è·¯å¾„|åŒ¹é…è¡Œæ•°|åŒ¹é…å†…å®¹=____________________________";
                 $_.Group;
             }
             "";
             $reaultCount = $reaultCount + 1;
         }
 } else {
-# % PSPath # ³ı·ÇÊÇÊä³öµ¥¸öÊôĞÔ(Ã»ÓĞÆäÓà²Ù×÷)²ÅÄÜ²»ÓÃ»¨À¨ºÅÒÔ¼°$_
+# % PSPath # é™¤éæ˜¯è¾“å‡ºå•ä¸ªå±æ€§(æ²¡æœ‰å…¶ä½™æ“ä½œ)æ‰èƒ½ä¸ç”¨èŠ±æ‹¬å·ä»¥åŠ$_
 $condition | % {
-				if($_.PSPath){ # Ã²ËÆÅÌ·û¸ùÄ¿Â¼ÊÇ¿Õ
+				if($_.PSPath){ # è²Œä¼¼ç›˜ç¬¦æ ¹ç›®å½•æ˜¯ç©º
 					trimPsPath($_.PSPath.ToString());
 				}
                 $reaultCount = $reaultCount + 1;
             }
 }
-"ËÑË÷ÏîÄ¿Êı:" + $reaultCount;
+"æœç´¢é¡¹ç›®æ•°:" + $reaultCount;
 
-# ÎŞÊä³öÕï¶Ï¼ÆÊ± https://www.pstips.net/logging-script-runtime.html
+# æ— è¾“å‡ºè¯Šæ–­è®¡æ—¶ https://www.pstips.net/logging-script-runtime.html
 # Measure-Command -Expression {}
 $end = Get-Date
 Write-Host -ForegroundColor Red ('Total Runtime: ' + ($end - $start).TotalSeconds)

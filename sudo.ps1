@@ -4,32 +4,32 @@ $customCmdMap = @{}
 # $customCmd = Select-Object -Property c $c
 $customCmdMap.Add("c", $c);
 # cmdlet Get-Item
-# µ±Ç°Ö´ĞĞÂ·¾¶ ¿ÉÒÔ±»×Ó½ø³Ì»ñÈ¡ µ«½ö½öÊÇÓµÓĞÍ¬Ò»¸ö»·¾³µÄ½ø³Ì ÇĞ»»ÓÃ»§ºóÆä»·¾³Ò²»á¸Ä±ä
-# Òò´Ë×îºÃÔÚµ±Ç°»·¾³½øĞĞ²ÎÊı½âÎö Ò²¿ÉÊ¹ÓÃ×Ô´øµÄ $pwd 
+# å½“å‰æ‰§è¡Œè·¯å¾„ å¯ä»¥è¢«å­è¿›ç¨‹è·å– ä½†ä»…ä»…æ˜¯æ‹¥æœ‰åŒä¸€ä¸ªç¯å¢ƒçš„è¿›ç¨‹ åˆ‡æ¢ç”¨æˆ·åå…¶ç¯å¢ƒä¹Ÿä¼šæ”¹å˜
+# å› æ­¤æœ€å¥½åœ¨å½“å‰ç¯å¢ƒè¿›è¡Œå‚æ•°è§£æ ä¹Ÿå¯ä½¿ç”¨è‡ªå¸¦çš„ $pwd 
 $env:CURRENT_EXE_FULL_PATH = (gi .).FullName.ToString()
 $fullPath = $env:CURRENT_EXE_FULL_PATH
 
 #if($customCmdMap['c'] -eq ''){
 if([String]::IsNullOrEmpty($c)){
-  $customCmdMap['c'] = "echo Çë´«ÈëÃüÁîĞĞ²ÎÊı:c;";
+  $customCmdMap['c'] = "echo è¯·ä¼ å…¥å‘½ä»¤è¡Œå‚æ•°:c;";
 }else{
   # $customCmdMap['c'] = "echo helloworld-3;";
 }
 
-# Ò²²»ÖªµÀÄÄ¿´µÄ ÖØÆô´òÓ¡»ú½ø³ÌÀ´»ñÈ¡È¨ÏŞ
+# ä¹Ÿä¸çŸ¥é“å“ªçœ‹çš„ é‡å¯æ‰“å°æœºè¿›ç¨‹æ¥è·å–æƒé™
 #$command = 'Restart-Service -Name spooler; '+ $customCmdMap['c'] +'; pause;' 
-# Èô°Ñcd $pwd Ğ´ÔÚ´Ë´¦µÄ»°½«ÔÚĞÂ½¨µÄ½ø³ÌÖĞ½øĞĞ½âÎö
+# è‹¥æŠŠcd $pwd å†™åœ¨æ­¤å¤„çš„è¯å°†åœ¨æ–°å»ºçš„è¿›ç¨‹ä¸­è¿›è¡Œè§£æ
 $command = $customCmdMap['c']# + '; pause;'
 
-# RunasÃüÁîÄÜÈÃÓòÓÃ»§/ÆÕÍ¨UserÓÃ»§ÒÔ¹ÜÀíÔ±Éí·İÔËĞĞÖ¸¶¨³ÌĞò
-# runas /user:administrator # administrator Ó¦µ±ÊÇÒ»¸öÓĞĞ§µÄÓÃ»§ È»ºóÊäÈëÃÜÂë
+# Runaså‘½ä»¤èƒ½è®©åŸŸç”¨æˆ·/æ™®é€šUserç”¨æˆ·ä»¥ç®¡ç†å‘˜èº«ä»½è¿è¡ŒæŒ‡å®šç¨‹åº
+# runas /user:administrator # administrator åº”å½“æ˜¯ä¸€ä¸ªæœ‰æ•ˆçš„ç”¨æˆ· ç„¶åè¾“å…¥å¯†ç 
 
-# Æô¶¯½ø³ÌµÄ»°»áÔÚPACµÄGUIÖĞÑ¡ÔñÓÃ»§ ¿ÉÒÔÊ¹ÓÃPIN
-# ÒÔ¹ÜÀíÔ±Éí·İÔËĞĞ ¶¯×÷Æô¶¯µÄPowerShell½ø³Ì  -NoNewWindow
+# å¯åŠ¨è¿›ç¨‹çš„è¯ä¼šåœ¨PACçš„GUIä¸­é€‰æ‹©ç”¨æˆ· å¯ä»¥ä½¿ç”¨PIN
+# ä»¥ç®¡ç†å‘˜èº«ä»½è¿è¡Œ åŠ¨ä½œå¯åŠ¨çš„PowerShellè¿›ç¨‹  -NoNewWindow
 Start-Process -FilePath powershell.exe -ArgumentList "-noprofile -NoExit", "-command cd $fullPath; $command" -Verb runas #-WorkingDirectory .
 
 
-#  µ±ÒÔÌáÉıµÄÈ¨ÏŞÔËĞĞ½Å±¾Ê±£¬ÓÃ»§»·¾³µÄ¶à¸ö·½Ãæ½«·¢Éú±ä»¯£º µ±Ç°Ä¿Â¼ £¬µ±Ç°TEMPÎÄ¼ş¼ĞºÍËùÓĞÓ³ÉäµÄÇı¶¯Æ÷¶¼½«¶Ï¿ªÁ¬½Ó¡£ 
-# [RunasÃüÁîÄÜÈÃÓòÓÃ»§/ÆÕÍ¨UserÓÃ»§ÒÔ¹ÜÀíÔ±Éí·İÔËĞĞÖ¸¶¨³ÌĞò-µÎË®´©Ê¯Ëï½Ü-51CTO²©¿Í](https://blog.51cto.com/xjsunjie/1979672)
+#  å½“ä»¥æå‡çš„æƒé™è¿è¡Œè„šæœ¬æ—¶ï¼Œç”¨æˆ·ç¯å¢ƒçš„å¤šä¸ªæ–¹é¢å°†å‘ç”Ÿå˜åŒ–ï¼š å½“å‰ç›®å½• ï¼Œå½“å‰TEMPæ–‡ä»¶å¤¹å’Œæ‰€æœ‰æ˜ å°„çš„é©±åŠ¨å™¨éƒ½å°†æ–­å¼€è¿æ¥ã€‚ 
+# [Runaså‘½ä»¤èƒ½è®©åŸŸç”¨æˆ·/æ™®é€šUserç”¨æˆ·ä»¥ç®¡ç†å‘˜èº«ä»½è¿è¡ŒæŒ‡å®šç¨‹åº-æ»´æ°´ç©¿çŸ³å­™æ°-51CTOåšå®¢](https://blog.51cto.com/xjsunjie/1979672)
 # [Run with elevated permissions UAC - PowerShell - SS64.com](https://ss64.com/ps/syntax-elevate.html)
-# [2018-8-23-ProcessÖ´ĞĞÂ·¾¶ - huangtengxiao](https://xinyuehtx.github.io/post/Process%E6%89%A7%E8%A1%8C%E8%B7%AF%E5%BE%84.html)
+# [2018-8-23-Processæ‰§è¡Œè·¯å¾„ - huangtengxiao](https://xinyuehtx.github.io/post/Process%E6%89%A7%E8%A1%8C%E8%B7%AF%E5%BE%84.html)

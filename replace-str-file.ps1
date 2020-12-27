@@ -8,11 +8,11 @@ param
 [string]$realFilePath = Resolve-Path($filePath)
 [string[]]$resultList = $null
 
-"ÕıÔò½Ì³Ì: https://www.jianshu.com/p/986d7ca63bdc"
-"-replaceStrReg '(ÕâÀïĞ´ÕıÔò)'"
-"(^\[.*\]) ±íÊ¾ÒÔ±»ÖĞÀ¨ºÅ°ü¹üµÄÈÎÒâ×Ö·ûÆäÖĞ·´Ğ±¸ÜÊÇ×ªÒåÖĞÀ¨ºÅµÄ"
+"æ­£åˆ™æ•™ç¨‹: https://www.jianshu.com/p/986d7ca63bdc"
+"-replaceStrReg '(è¿™é‡Œå†™æ­£åˆ™)'"
+"(^\[.*\]) è¡¨ç¤ºä»¥è¢«ä¸­æ‹¬å·åŒ…è£¹çš„ä»»æ„å­—ç¬¦å…¶ä¸­åæ–œæ æ˜¯è½¬ä¹‰ä¸­æ‹¬å·çš„"
 
-#  ÓÃ PowerShell Êä³öÖĞÎÄµ½¼ôÌù°å  https://blog.vichamp.com/2014/07/21/forward-chinese-text-into-clipboard/
+#  ç”¨ PowerShell è¾“å‡ºä¸­æ–‡åˆ°å‰ªè´´æ¿  https://blog.vichamp.com/2014/07/21/forward-chinese-text-into-clipboard/
 $OutputEncoding = [Console]::OutputEncoding
 
 $resultList = Get-Content $realFilePath
